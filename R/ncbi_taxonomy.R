@@ -40,13 +40,16 @@ getTree <- function(taxids) {
         tree <- ncbi$get_topology(
             taxids = taxids, intermediate_nodes = TRUE, annotate = TRUE
         )
-        temp_file <- tempfile()
+        tree_file <- tempfile()
         tree$write(
-            outfile = temp_file,
+            outfile = tree_file,
             format = 2,
             features = list("name", "rank", "sci_name", "taxid")
         )
-        output_tree <- treeio::read.nhx(temp_file)
+        tree_text <- readr::read_file(tree_file)
+        tree_text <- gsub(" ", "_", tree_text)
+        readr::write_file(tree_text, tree_file)
+        output_tree <- treeio::read.nhx(tree_file)
         output_tree
     }, TAXIDS = taxids)
 
