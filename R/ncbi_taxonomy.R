@@ -38,8 +38,9 @@ getTree <- function(taxids) {
         ete3 <- reticulate::import("ete3")
         ncbi <- ete3$NCBITaxa()
         tree <- ncbi$get_topology(
-            taxids = taxids, intermediate_nodes = TRUE, annotate = TRUE
+            taxids = taxids, intermediate_nodes = FALSE, annotate = TRUE
         )
+        tree$resolve_polytomy(recursive = TRUE)
         tree_file <- tempfile()
         tree$write(
             outfile = tree_file,
